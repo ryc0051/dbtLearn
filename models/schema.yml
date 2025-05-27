@@ -33,7 +33,7 @@ models:
         tests:
           - accepted_values:
               values:
-                ["placed", "shipped", "completed", "return_pending", "returned"]
+                ["placed", "shipped", "completed", "return_pending", "returned",    _ETL_LOADED_AT]
       - name: customer_id
         tests:
           - not_null

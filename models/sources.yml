@@ -9,11 +9,11 @@ sources:
           - name: customers
             description: One record per customer.
           - name: orders
-            loaded_at_field: _batched_at
+            loaded_at_field: _ETL_LOADED_AT
             description: One record per order. Includes cancelled and deleted orders.
             freshness: 
               error_after:
-                count: 1
+                count: 15
                 period: day
               warn_after:
                 count: 1
