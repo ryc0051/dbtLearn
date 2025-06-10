@@ -14,6 +14,7 @@ select
             partition by user_id order by order_date, id
         ) as user_order_seq
     FROM source
+ --   {{limit_data_in_dev('order_date')}}
 )
 
 SELECT * From transformed

@@ -1,4 +1,4 @@
-with 
+with
 orders as  (
     select * from {{ ref('stg_jaffle_shop__orders') }}
 
@@ -8,7 +8,27 @@ customers as (
 ),
 payment as (
     select * from {{ ref('stg__stripe_payment') }}
+    where payment_status != 'fail'
 ),
+order_totals as (
+    select
+    order_id,
+    payment_status as payment_order_status, -- Renamed for clarity, assuming payment_status from 'payment' is what you want
+    sum(payment_amount) as order_value_dollars
+    from payment
+    group by 1, 2 -- Grouping by payment_status as well if it's in the select
+),
+
+order_values_joined as (
+    Select
+    orders.*,
+    order_totals.order_value_dollars,
+    order_totals.payment_order_status
+    from orders
+    INNER JOIN order_totals
+    on orders.order_id = order_totals.order_id
+),
+
 
 customer_order_history as (
     select
@@ -60,7 +80,6 @@ customer_order_history as (
     from orders as a
     inner join customers as customers on a.customer_id = customers.customer_id
     left outer join payment as c on a.order_id = c.order_id
-    where a.order_status not in ('pending') and c.payment_status != 'fail'
     group by         
         customers.customer_id,
         customers.full_name,
@@ -87,4 +106,3 @@ inner join
 left outer join
      payment
     on orders.order_id = payment.order_id
-where payment.payment_status != 'fail'

@@ -38,3 +38,14 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   jaffle_shop:
       +materialized: table
+  stripe_payments:
+      +materialized: table
+  stg_jaffle_shop__orders:
+      +materialized: view
+  stg_jaffle_shop_customers:
+      +materialized: view
+  stg__stripe_payment:
+      +materialized: view
+  
+  
+  
